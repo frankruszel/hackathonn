@@ -1,0 +1,52 @@
+{% extends 'budgeter.html' %}
+
+{% block transactionTable %}
+<div class="row  gx-1">
+             <div class="card gy-3 p-4" style="min-height:300px;">
+                 <div class="row">
+                     <div class="col">
+                         <span class=" fs-4 text ">
+                              <a href="/budgeter/wants"><i class='bx bx-chevron-left' style="color:#6c757d"  ></i></a> Savings <a href="/budgeter/needs" ><i class='bx bx-chevron-right' style="color:#6c757d" ></i></a>
+                          </span>
+
+                     </div>
+                     <div class="col-auto">
+                         <a href="/add_transaction">
+                        <button class="btn btn-primary" style="width:100%">Add Transaction</button>
+                    </a>
+                     </div>
+
+                 </div>
+                 <div class="row">
+                     {% if transactions %}
+                    <table class="table">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">Title</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Amount</th>
+                          <th scope="col">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                              {% for transaction in transactions %}
+                                <tr>
+                                  <td>{{transaction.title}}</td>
+                                  <td>{{transaction.category}}</td>
+                                  <td>{{transaction.amount}}</td>
+                                  <td>{{transaction.transaction_time }}</td>
+                                </tr>
+                                {% endfor %}
+
+
+
+                      </tbody>
+                    </table>
+                     {% else %}
+                    <span>No transactions</span>
+                    {% endif %}
+                 </div>
+              </div>
+         </div>
+{% endblock %}

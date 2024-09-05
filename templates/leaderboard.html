@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #efefef;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 500px;
+}
+
+h1 {
+    color: #f39c12;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.current-rank {
+    background-color: #f39c12;
+    padding: 10px;
+    margin-bottom: 30px;
+    margin-top: -10px;
+    border-radius: 5px;
+    color: white;
+}
+
+.podium {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.podium-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    color: #f0f0f0;
+    position: relative;
+}
+
+.podium-item.first {
+    height: 200px;
+    background-color: #e74c3c;
+}
+
+.podium-item.second {
+    height: 150px;
+    background-color: #3498db;
+}
+
+.podium-item.third {
+    height: 120px;
+    background-color: #2ecc71;
+}
+
+.rank {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.name {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.xp {
+    font-size: 1rem;
+    color: #f39c12;
+}
+
+/* Medal Styles */
+.medal {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: -30px;
+}
+
+/* Honorable Mentions */
+.honorable-mentions {
+    margin-top: 20px;
+}
+
+.honorable-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #34495e;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.rank {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+.name {
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.xp {
+    font-weight: bold;
+    color: #f39c12;
+}
+
+h2 {
+    color: #bdc3c7;
+    margin-top: 30px;
+    font-size: 1.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+        <h1>Hardcore XP Podium</h1>
+
+        <!-- Current Rank -->
+        <div class="current-rank">
+            <p>Your current rank is: <strong>#1</strong></p>
+        </div>
+
+        <!-- Podium Section -->
+        <div class="podium">
+            <!-- 2nd Place -->
+            <div class="podium-item second">
+                <img src="{{ url_for('static', filename='silver-medal.jpg') }}" alt="2nd place medal" class="medal">
+                <div class="rank">#2</div>
+                <div class="name">{{ rankings[1].name }}</div>
+                <div class="xp">{{ rankings[1].xp }} XP</div>
+            </div>
+
+            <!-- 1st Place (taller) -->
+            <div class="podium-item first">
+                <img src="{{ url_for('static', filename='gold-medal.jpg') }}" alt="1st place medal" class="medal">
+                <div class="rank">#1</div>
+                <div class="name">{{ rankings[0].name }}</div>
+                <div class="xp">{{ rankings[0].xp }} XP</div>
+            </div>
+
+            <!-- 3rd Place -->
+            <div class="podium-item third">
+                <img src="{{ url_for('static', filename='bronze-medal.jpg') }}" alt="3rd place medal" class="medal">
+                <div class="rank">#3</div>
+                <div class="name">{{ rankings[2].name }}</div>
+                <div class="xp">{{ rankings[2].xp }} XP</div>
+            </div>
+        </div>
+
+        <!-- Honorable Mentions -->
+        <h2>Honorable Mentions</h2>
+        <div class="honorable-mentions">
+            {% for player in rankings[3:] %}
+            <div class="honorable-item">
+                <span class="rank">#{{ player.rank }}</span>
+                <span class="name">{{ player.name }}</span>
+                <span class="xp">{{ player.xp }} XP</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{%endblock%}

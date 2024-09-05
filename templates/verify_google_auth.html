@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Authenticator Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="money-2724241_1280.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Google Authenticator Verification</h1>
+    </div>
+    <div class="container">
+        <div class="login-box">
+            <h2>Google Authenticator Verification</h2>
+            {% if msg %}
+                <p>{{ msg }}</p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('verify_google_auth') }}">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <label for="auth_code">Enter Google Authenticator Code:</label>
+                    {{ form.auth_code(size=32) }}
+                </div>
+                <div class="form-group">
+                    {{ form.submit(class_="button") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        <p>© 2024 EBMT Banking. All rights reserved.</p>
+    </div>
+</body>
+</html>

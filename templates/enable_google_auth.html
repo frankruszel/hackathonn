@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="money-2724241_1280.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>User Profile</h1>
+    </div>
+    <div class="container">
+        <div class="profile-box">
+            <h2>User Profile</h2>
+            <p>Welcome, {{ account.username }}!</p>
+            {% if account.google_auth_enabled %}
+                <p>Google Authenticator is enabled.</p>
+                <p>Scan the QR code below with Google Authenticator:</p>
+                <img src="{{ qr_code_url }}" alt="Google Authenticator QR Code" class="center" height="200" width="200">
+                <form method="POST" action="{{ url_for('toggle_google_auth') }}">
+                    <input type="hidden" name="google_auth_enabled" value="false">
+                </form>
+            {% else %}
+                <p>Google Authenticator is disabled.</p>
+                <form method="POST" action="{{ url_for('toggle_google_auth') }}">
+                    <input type="hidden" name="google_auth_enabled" value="true">
+                    <button type="submit" class="button">Enable Google Authenticator</button>
+                </form>
+            {% endif %}
+            <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 YourApp. All rights reserved.</p>
+    </div>
+
+</body>
+</html>

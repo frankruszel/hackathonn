@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Transaction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Your existing CSS styles */
+        body {
+            background: url('{{ url_for("static", filename="money-2724241_1280.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        #warningModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Slightly darker background */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 1000; /* Ensure the modal is above other content */
+        }
+        #warningModal button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #warningModal button:first-child {
+            background-color: #4CAF50;
+        }
+        #warningModal button:last-child {
+            background-color: #f44336;
+        }
+        .header {
+            background-color: #004080;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            margin: 0 10px;
+            display: inline-block;
+        }
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .transaction-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 60px auto;
+            text-align: center;
+        }
+
+        .transaction-container h2 {
+            color: #0d4e85;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .transaction-history {
+            margin-top: 20px;
+        }
+
+        .transaction-history a {
+            color: #0d4e85;
+            text-decoration: none;
+        }
+
+        .transaction-history a:hover {
+            text-decoration: underline;
+        }
+
+        .flash {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: black;
+            text-align: center;
+        }
+
+        .flash.success {
+            background-color: #28a745;
+        }
+
+        .flash.error {
+            background-color: #dc3545;
+        }
+
+        .footer {
+            background: #0d4e85;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>EBMT Banking</h1>
+    </div>
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('make_transaction') }}">Make Transaction</a>
+        <a href="{{ url_for('transaction_history') }}">View Transaction History</a>
+        <a href="{{ url_for('sessions') }}">Device Management</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="transaction-container">
+        <h2>Make a Transaction</h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('make_transaction') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <!--  CSRF Token -->
+            <div class="form-group">
+                <label for="recipient_username">Recipient Username:</label>
+                <input type="text" id="recipient_username" name="recipient_username" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" step="0.01" required>
+            </div>
+            <button type="submit" class="btn">Make Transaction</button>
+        </form>
+        <div class="transaction-history">
+            <a href="{{ url_for('transaction_history') }}">View Transaction History</a>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 EBMT Banking. All rights reserved.</p>
+    </div>
+    <div id="warningModal">
+        <p>You have been inactive for a while. Do you want to continue your session?</p>
+        <button onclick="continueSession()">Continue</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+    <script>
+        let sessionTimeout = 30 * 1000;
+        let warningTime = 10 * 1000;
+        let timeoutHandle;
+        let warningHandle;
+        let isLoggedOut = false;
+
+        function startTimer() {
+            clearTimeout(timeoutHandle);
+            clearTimeout(warningHandle);
+
+            timeoutHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    window.location.href = '/logout';
+                }
+            }, sessionTimeout);
+
+            warningHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    showWarning();
+                }
+            }, sessionTimeout - warningTime);
+        }
+
+        function showWarning() {
+            document.getElementById('warningModal').style.display = 'block';
+        }
+
+        function continueSession() {
+            document.getElementById('warningModal').style.display = 'none';
+            startTimer();
+        }
+
+        function logout() {
+            isLoggedOut = true;
+            window.location.href = '/logout';
+        }
+
+        function resetTimer() {
+            startTimer();
+        }
+
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onkeydown = resetTimer;
+    </script>
+</body>
+</html>

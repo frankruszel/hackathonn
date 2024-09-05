@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+{% endblock %}
+{%block content%}
+<div class="row mb-3">
+    <div class="col">
+        <header class="fs-2 text">
+            Budget
+        </header>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-6">
+         <div class="card" style="min-height:300px;padding:20px;">
+            <div class="row">
+                <div class="col">
+                    <header class="fs-4">
+                        Balance
+                    </header>
+                </div>
+                 <div class="col-auto col-4">
+                    <a href="/add_transaction">
+                        <button class="btn btn-primary" style="width:100%">Add Balance</button>
+                    </a>
+                </div>
+            </div>
+             <div class="row">
+                 {{user.balance}}
+             </div>
+
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card" style="min-height:300px;padding:20px;">
+            <div class="row">
+                <div class="col">
+                    <header class="fs-4">
+                        Transactions
+                    </header>
+                </div>
+                 <div class="col-auto col-4">
+                    <a href="/add_transaction">
+                        <button class="btn btn-primary" style="width:100%">Add Transaction</button>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    {% if transactions %}
+                    <table class="table">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">Title</th>
+                          <th scope="col">Category</th>
+                          <th scope="col">Amount</th>
+                          <th scope="col">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                              {% for transaction in transactions %}
+                                <tr>
+                                  <td>{{transaction.title}}</td>
+                                  <td>{{transaction.category}}</td>
+                                  <td>{{transaction.amount}}</td>
+                                  <td>{{transaction.transaction_time }}</td>
+                                </tr>
+                                {% endfor %}
+
+
+
+                      </tbody>
+                    </table>
+                     {% else %}
+                    <span>No transactions</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

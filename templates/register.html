@@ -1,0 +1,85 @@
+
+
+
+
+
+{% block js %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+{% block css %}
+<link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+<div style="opacity:0.3;
+    background-color:#ccc;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:-1;">
+    </div>
+<div class="container">
+    <div class="row">
+    <div class="row">
+
+        <a href="/home">
+            <div style="padding-left: 20px;padding-right: 20px;background-color:#2f3640;min-height:100px;justify-content:center;text-align:center;display:flex;vertical-align:center;line-height:500px;width: 400px;">
+                <span style="color:white;font-size:20;font-weight:bold;" >
+                    <i class='bx bxs-coin-stack' style="font-size:50px;margin-top:25px;"></i>
+                </span>
+            </div>
+        </a>
+        <div class="register-box">
+            <h2>Register</h2>
+            <form method="post" onsubmit="return validatePasswords()">
+                {{ form.hidden_tag() }}
+                <p>{{ msg }}</p>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    {{ form.username(class_="form-control", placeholder="Username") }}
+                    {% if form.username.errors %}
+                        <span class="error">{{ form.username.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    {{ form.password(class_="form-control", placeholder="Password") }}
+                    {% if form.password.errors %}
+                        <span class="error">{{ form.password.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    {{ form.confirm_password(class_="form-control", placeholder="Confirm Password") }}
+                    {% if form.confirm_password.errors %}
+                        <span class="error">{{ form.confirm_password.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    {{ form.email(class_="form-control", placeholder="Email") }}
+                    {% if form.email.errors %}
+                        <span class="error">{{ form.email.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    {{ form.phone(class_="form-control", placeholder="Phone Number") }}
+                    {% if form.phone.errors %}
+                        <span class="error">{{ form.phone.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="button" style="width:100%">Register</button>
+            </form>
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
+    </div>
+ </div>

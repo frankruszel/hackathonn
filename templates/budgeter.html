@@ -1,0 +1,588 @@
+{%extends "base.html"%}
+{%block title%}Home{%endblock%}
+{%block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src=
+"https://d3js.org/d3.v4.min.js"></script>
+<script src=
+"https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.js"></script>
+<link rel="stylesheet"
+      href=
+"https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.css" />
+<link rel=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+      type="text/css" />
+
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+</script>
+<script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+
+{%endblock %}
+{% block content %}
+<header class="fs-2 text">
+
+</header>
+<div class="row ">
+
+    <div class="col-12">
+        <div class="row ">
+            <!--          Needs  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+
+                         <div class="col" style="line-height:35px">
+                            <div class="row">
+
+                                 <div class="col-1" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                                        <img src="https://cdn-icons-png.flaticon.com/128/3427/3427826.png" style="max-width:28px;margin:0;"  alt="">
+                                   </div>
+
+                                 <div class="col">
+                                     <div class="row">
+                                         <div class="col">
+                                         <span class=" fs-4 text ">
+                                           Allowance
+                                         </span>
+                                     </div>
+
+                                      <div class="col-3 col-auto">
+                                         <a href="/budgeter/allowance/edit" class="btn btn-primary"> edit</a>
+                                    </div>
+                                     </div>
+
+
+
+                                 </div>
+
+                             </div>
+
+
+                                <div class="row-6" style="display:flex;justify-content:center;">
+                                    <div class="col">
+                                        <canvas id="myChart" style="width:100%;max-width:90px;max-height:90px;"></canvas>
+                                    </div>
+                                    <div class="col mt-4" style="text-align:center; ">
+<div class="row">
+    <span class="fs-2">
+${{ "%.2f"|format( budget_obj.allowance / budget_obj.days_total )}}
+
+                                        </span>
+</div>
+                                        <div class="row">
+                                            <span class="" style="font-size:15px;">
+per day
+                                        </span>
+                                        </div>
+
+
+
+
+
+
+
+
+
+                                    </div>
+
+                                  </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+              </div>
+            </div>
+            <!--            Allowance Card End -->
+            <!--          Needs  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/753/753839.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                         <div class="col" style="line-height:35px">
+                            <div class="row" style="display:flex">
+                                <div class="col">
+                                     <span style="font-size:20px; font-weight:bold">
+                                            Needs
+                                        </span>
+
+
+
+                                </div>
+                                <div class="col-1 col-auto">
+                                    <a href="/budgeter/needs/limit" class="btn"><img src="https://cdn-icons-png.flaticon.com/128/2311/2311524.png" style="max-height:20px" alt=""></a>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+
+                                {% if budget_obj %}
+                                ${{ "%.2f"|format((budget_obj.needs_today_expense)) }}
+                                {%endif%}
+
+
+
+
+                        </span>
+                        <span>
+                            /
+                            {% if budget_obj %}
+                                ${{ "%.2f"|format((budget_obj.needs.remaining / budget_obj.days_left)) }}
+                                {%endif%} daily
+                        </span>
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{budget_obj.needs_today_expense / (budget_obj.needs.remaining / budget_obj.days_left) * 100}}%;" aria-valuenow="" aria-valuemin="0" aria-valuemax="{{budget_obj.needs.remaining / budget_obj.days_left}}">
+                                   {{ "%.0f"|format(budget_obj.needs_today_expense / (budget_obj.needs.remaining / budget_obj.days_left) * 100)}} %</div>
+                             </div>
+<!--                            {% if budget_obj.needs.on_track  == "on_track" %}-->
+<!--                                <div class="progress p-0" >-->
+<!--                                <div class="progress-bar  bg-success" role="progressbar" style="width: 25%;" aria-valuenow="{{budget_obj.needs.remaining}}" aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">-->
+<!--                                    {{ budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage }}%</div>-->
+<!--                             </div>-->
+<!--                            {% else %}-->
+<!--                            {% if  budget_obj.needs.on_track  == "over" %}-->
+<!--                                 <div class="progress p-0" >-->
+
+<!--                            <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">-->
+<!--                            {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>-->
+<!--                            <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">-->
+<!--                                {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>-->
+
+<!--                            </div>-->
+<!--                            {% elif budget_obj.needs.on_track  == "under"  %}-->
+<!--                            <div class="progress p-0" >-->
+<!--                                <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">-->
+<!--                                    {{ "%.1f"|format( (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage))   }}%</div>-->
+<!--                                <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">-->
+<!--                                {{ "%.1f"|format(  (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) ) - (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) )   }}%</div>-->
+<!--{%else%}-->
+<!--                                test-->
+
+<!--                                </div>-->
+<!--                                {% endif %}-->
+
+
+
+<!--                            {% endif %}-->
+
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Needs Card End -->
+            <!--          Wants  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/13/13973.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                        <div class="col-8 " style="line-height:35px">
+                            <span style="font-size:20px; font-weight:bold">
+                                Wants
+                            </span>
+
+
+                        </div>
+                    </div>
+                     <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+                                {% if budget_obj %}
+                                ${{ "%.2f"|format((budget_obj.wants.remaining / budget_obj.days_left)) }}
+                                {%endif%}
+
+
+
+
+
+                        </span>
+                        <span>
+                            / day
+                        </span>
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{budget_obj.wants_today_expense / (budget_obj.wants.remaining / budget_obj.days_left) * 100}}%;" aria-valuenow="" aria-valuemin="0" aria-valuemax="{{budget_obj.needs.remaining / budget_obj.days_left}}">
+                                   {{ "%.0f"|format(budget_obj.wants_today_expense / (budget_obj.wants.remaining / budget_obj.days_left) * 100)}} %</div>
+                             </div>
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Wants Card End -->
+             <!--          Savings  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/126/126229.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                        <div class="col " style="line-height:35px">
+                            <span style="font-size:20px; font-weight:bold">
+                                Savings
+                            </span>
+
+
+                        </div>
+
+                    </div>
+                     <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+{% if budget_obj %}
+                                ${{ "%.2f"|format((budget_obj.savings.remaining / budget_obj.days_left)) }}
+
+                                {%endif%}
+
+
+
+
+
+                        </span>
+                        <span>
+                            / day
+                        </span>
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{100 - (budget_obj.savings_today_expense / (budget_obj.savings.remaining / budget_obj.days_left) * 100)}}%;" aria-valuenow="" aria-valuemin="0" aria-valuemax="{{budget_obj.needs.remaining / budget_obj.days_left}}">
+                                  {{ "%.0f"|format(100 - (budget_obj.savings_today_expense / (budget_obj.savings.remaining / budget_obj.days_left) ) * 100)}} %</div>
+
+                             </div>
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Allowance-Old Card End -->
+<!--            &lt;!&ndash;          Dining  Card Start &ndash;&gt;-->
+<!--            <div class="col gx-4" >-->
+<!--              <div class="card" style="min-height:180px;display:flex">-->
+<!--                <div class="container row" style="display:flex;padding-right:0">-->
+<!--                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >-->
+<!--                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">-->
+<!--                            <img src="https://cdn-icons-png.flaticon.com/128/3427/3427826.png" style="max-width:28px;margin:0;"  alt="">-->
+<!--                       </div>-->
+<!--                        <div class="col" style="line-height:35px">-->
+<!--                            <div class="row" style="display:flex">-->
+<!--                                <div class="col">-->
+<!--                                     <span style="font-size:20px; font-weight:bold">-->
+<!--                                            Allowance-->
+<!--                                        </span>-->
+
+<!--                                </div>-->
+<!--                                <div class="col-3 col-auto">-->
+<!--                                     <a href="/budgeter/allowance/edit" class="btn btn-primary"> edit</a>-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+
+
+<!--                        </div>-->
+
+
+<!--                    </div>-->
+<!--                     <div class="row g-2" style="text-align:center">-->
+<!--                        <div class="col">-->
+<!--                            <span class="fs-3">-->
+
+
+<!--                                ${{ "%.1f"|format((budget_obj.allowance / budget_obj.days_left)) }}-->
+<!--&lt;!&ndash;                                conditional if on track start&ndash;&gt;-->
+<!--                                {% if budget_obj.savings.on_track %}-->
+
+<!--                                {% else %}-->
+<!--                                {% endif %}-->
+<!--                                &lt;!&ndash;                                conditional if on track end&ndash;&gt;-->
+
+
+<!--                        </span>-->
+<!--                        <span>-->
+<!--                            left-->
+<!--                        </span>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+<!--                     <div class="row-auto gy-3" >-->
+<!--                        <div class="row" style="padding-top:20">-->
+<!--                            <div class="progress p-0" >-->
+<!--                                <div class="progress-bar  bg-success" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="">25%</div>-->
+<!--                             </div>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash;            Allowance-Old Card End &ndash;&gt;-->
+
+
+        </div>
+        <div class="row">
+            <div class="col-6">
+                 {% block transactionTable %}
+                {% endblock %}
+            </div>
+            <div class="col-6">
+<!--                monthly progress-->
+                <div class="row  gx-1">
+                     <div class="card gy-3 p-4" style="min-height:300px;">
+                         <div class="row mb-3">
+                             <span class="fs-4">Monthly Progress</span>
+                         </div>
+                         <div class="row">
+                        <div class="col-1" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/753/753839.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+<!--                             needs-->
+                        <div class="col-11" >
+                            <div class="row mt-2 px-2">
+                            {% if budget_obj.needs.on_track  == "on_track" %}
+                                <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{(budget_obj.needs_total_expense / (budget_obj.allowance / 100 * budget_obj.needs.percentage)) * 100}}%;" aria-valuenow="{{(budget_obj.needs_total_expense / (budget_obj.allowance / 100 * budget_obj.needs.percentage)) * 100}}" aria-valuemin="0" aria-valuemax="{{budget_obj.allowance / 100 * budget_obj.needs.percentage}}">
+                                    {{ "%.0f"|format( (budget_obj.needs_total_expense / (budget_obj.allowance / 100 * budget_obj.needs.percentage)) * 100 )}}%</div>
+                             </div>
+                            {% else %}
+                            {% if  budget_obj.needs.on_track  == "over" %}
+                                 <div class="progress p-0" >
+
+                            <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">
+                            {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+                            <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">
+                                {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+
+                            </div>
+                            {% elif budget_obj.needs.on_track  == "under"  %}
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) - (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">
+                                    {{ "%.1f"|format( (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage))   }}%</div>
+                                <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.needs.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.needs.percentage}}">
+                                {{ "%.1f"|format(  (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) ) - (  (budget_obj.allowance / 100 * budget_obj.needs.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.needs.remaining / budget_obj.allowance * budget_obj.needs.percentage) )   }}%</div>
+{%else%}
+                                test
+
+                                </div>
+                                {% endif %}
+
+
+
+                            {% endif %}
+
+                            </div>
+
+                         </div>
+<!--                             needs-->
+                        </div>
+<!--                         wants -->
+                         <div class="row mt-4">
+                        <div class="col-1" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/13/13973.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                        <div class="col-11" >
+                            <div class="row mt-2 px-2">
+
+                                   {% if budget_obj.wants.on_track  == "on_track" %}
+                                <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{(budget_obj.wants_total_expense / (budget_obj.allowance / 100 * budget_obj.wants.percentage)) * 100}}%;" aria-valuenow="{{(budget_obj.wants_total_expense / (budget_obj.allowance / 100 * budget_obj.wants.percentage)) * 100}}" aria-valuemin="0" aria-valuemax="{{budget_obj.allowance / 100 * budget_obj.wants.percentage}}">
+                                    {{ "%.0f"|format( (budget_obj.wants_total_expense / (budget_obj.allowance / 100 * budget_obj.wants.percentage)) * 100 )}}%</div>
+                             </div>
+                            {% else %}
+                            {% if  budget_obj.wants.on_track  == "over" %}
+                                 <div class="progress p-0" >
+
+                            <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.wants.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.wants.percentage}}">
+                            {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+                            <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.wants.remaining / budget_obj.allowance * budget_obj.wants.percentage) - (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.wantswants.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.wants.percentage}}">
+                                {{ "%.1f"|format( (budget_obj.wants.remaining / budget_obj.allowance * budget_obj.wants.percentage) - (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+
+                            </div>
+                            {% elif budget_obj.wants.on_track  == "under"  %}
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.wants.remaining / budget_obj.allowance * budget_obj.wants.percentage) - (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.wants.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.wants.percentage}}">
+                                    {{ "%.1f"|format( (  (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.wants.remaining / budget_obj.allowance * budget_obj.wants.percentage))   }}%</div>
+                                <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.wants.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.wants.percentage}}">
+                                {{ "%.1f"|format(  (  (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) ) - (  (budget_obj.allowance / 100 * budget_obj.wants.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.wants.remaining / budget_obj.allowance * budget_obj.wants.percentage) )   }}%</div>
+{%else%}
+                                test
+
+                                </div>
+                                {% endif %}
+
+
+
+                            {% endif %}
+<!--                                wants end-->
+                            </div>
+
+                         </div>
+                        </div>
+<!--                         wants end-->
+<!--                         savings start-->
+                         <div class="row mt-4">
+                        <div class="col-1" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/126/126229.png"  style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                        <div class="col-11" >
+                            <div class="row mt-3 px-2">
+
+
+
+                                   {% if budget_obj.savings.on_track  == "on_track" %}
+                                <div class="progress p-0" >
+                                <div class="progress-bar  bg-success" role="progressbar" style="width: {{((budget_obj.allowance / 100 * budget_obj.savings.percentage) / budget_obj.days_left) * budget_obj.days_passed}}%;" aria-valuenow="{{((budget_obj.allowance / 100 * budget_obj.savings.percentage) / budget_obj.days_left) * budget_obj.days_passed }}" aria-valuemin="0" aria-valuemax="{{ budget_obj.allowance / 100 * budget_obj.savings.percentage }}">
+                                    {{
+
+                                    ((budget_obj.allowance / 100 * budget_obj.savings.percentage) / budget_obj.days_left) * budget_obj.days_passed
+                                    }}%
+                             </div>
+                            {% else %}
+                            {% if  budget_obj.savings.on_track  == "over" %}
+                                 <div class="progress p-0" >
+
+                            <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.savings.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.savings.percentage}}">
+                            {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+                            <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.savings.remaining / budget_obj.allowance * budget_obj.savings.percentage) - (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.savings.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.savings.percentage}}">
+                                {{ "%.1f"|format( (budget_obj.savings.remaining / budget_obj.allowance * budget_obj.savings.percentage) - (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%</div>
+
+                            </div>
+                            {% elif budget_obj.savings.on_track  == "under"  %}
+                            <div class="progress p-0" >
+                                <div class="progress-bar  bg-danger" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.savings.remaining / budget_obj.allowance * budget_obj.savings.percentage) - (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.savings.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.savings.percentage}}">
+                                    {{ "%.1f"|format( (  (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.savings.remaining / budget_obj.allowance * budget_obj.savings.percentage))   }}%</div>
+                                <div class="progress-bar  bg-secondary" role="progressbar" style='width: {{ "%.1f"|format( (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) )   }}%;" aria-valuenow="{{budget_obj.savings.remaining}}' aria-valuemin="0" aria-valuemax="{{budget_obj.allowance * budget_obj.savings.percentage}}">
+                                {{ "%.1f"|format(  (  (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) ) - (  (budget_obj.allowance / 100 * budget_obj.savings.percentage) * (budget_obj.days_passed / budget_obj.days_total) - budget_obj.savings.remaining / budget_obj.allowance * budget_obj.savings.percentage) )   }}%</div>
+{%else%}
+                                test
+
+                                </div>
+                                {% endif %}
+
+
+
+                            {% endif %}
+                                </div>
+                            </div>
+
+                         </div>
+                        </div>
+
+                         </div>
+                      </div>
+                 </div>
+            <!--                monthly progress-->
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+{% block script %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script>
+    // setup
+    const data = {
+
+      datasets: [{
+        label: 'Weekly Sales',
+        data: [{{budget_obj.needs.remaining}}, {{budget_obj.wants.remaining}},{{budget_obj.savings.remaining}}],
+        backgroundColor: [
+          '#28bfb4',
+          '#FF3100',
+          '#FFD700'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 0,
+
+        offset: 10,
+        cutout: 5,
+      }]
+    };
+    const doughnutLabel = {
+        id:'doughnutLabel',
+        beforeDatasetsDraw(chart,args,pluginOptions) {
+            const {ctx, data } = chart;
+            ctx.save();
+            const xCoor = chart.getDatasetMeta(0).data[0].x;
+            const yCoor = chart.getDatasetMeta(0).data[0].y;
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+         }
+    };
+
+    // config
+    const config = {
+      type: 'doughnut',
+      data,
+      plugins: [doughnutLabel]
+
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+    chartVersion.innerText = Chart.version;
+    </script>
+{% endblock %}
+
+{%endblock%}

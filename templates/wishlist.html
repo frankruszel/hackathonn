@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{%block content%}
+
+<div class="row">
+
+
+	<div class="col">
+		<header class="fs-2 text">
+			Saving Goals
+		</header>
+	</div>
+
+	<div class="col-auto">
+		<a href="/add_wishlist">
+			<button type="button" class="btn btn-primary">Add new Item</button>
+		</a>
+	</div>
+<!--						where the address can has CRUD , full name bolded, number beside it, block number is under-->
+							</div>
+<!--							make default first-->
+									{% if wishlist %}
+		{% for item in wishlist %}
+			<div class="row pt-2 ">
+				<div class="col card border rounded" style="border-radius:15px;height:110px">
+					<div class="row">
+						<div class="col">
+							<h5 class="mb-0 mt-2">{{item.name}}</h5>
+							<p class="fw-b mb-0"></p>
+							<p class="fw-light mb-0">${{item.price}} </p>
+
+							<div class="mb-2">
+								<span class="border border-secondary text-secondary p-1 mb-1"> {{item.category}} </span>
+							</div>
+
+
+
+						</div>
+
+
+						<div class="col-auto  pe-4, pt-1 ">
+							<div class="row">
+								<div class="col">
+									{{ "%.0f"|format( item.price / (budget_obj.savings.remaining / budget_obj.days_left) ) }} days
+							</div>
+							<div class="col">
+								<div class="row">
+								<div class="col">
+									<a class="btn btn-outline-secondary pull-right" style="width:100%">Edit</a>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col">
+									<a class="btn btn-outline-danger pull-right" style="width:100%">Delete</a>
+								</div>
+							</div>
+
+
+
+						  </div>
+							</div>
+							</div>
+
+
+						  </div>
+					</div>
+
+
+
+			</div>
+		{% endfor %}
+
+{%else%}
+Nothing in your wishlist
+{% endif %}
+
+
+
+				</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% block js %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+{% block css %}
+<link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+{% endblock %}
+<div style="opacity:0.3;
+    background-color:#ccc;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:-1;">
+    </div>
+<div class="container" style="z-index:1;">
+
+<div class="row">
+    <div class="row">
+
+    <a href="/home">
+            <div style="padding-left: 20px;padding-right: 20px;background-color:#2f3640;min-height:100px;justify-content:center;text-align:center;display:flex;vertical-align:center;line-height:500px;width: 400px;">
+                <span style="color:white;font-size:20;font-weight:bold;" >
+                    <i class='bx bxs-coin-stack' style="font-size:50px;margin-top:25px;"></i>
+                </span>
+            </div>
+        </a>
+
+    <div class="login-box">
+
+        <h2>Login</h2>
+        <form method="post">
+            <p>{{ msg }}</p>
+            <div class="form-group">
+                <label for="identifier">Username, Email, or Phone</label>
+                {{ form.identifier(class="form-control", id="identifier", required=True) }}
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                {{ form.password(class="form-control", id="password", required=True) }}
+            </div>
+            <div class="g-recaptcha" data-sitekey="6LfsCgwqAAAAAO-ql-57qn7mw9Kg1dTnBfIWe_IQ"></div>
+            <button type="submit" class="button" style="width:100%">Login</button>
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
+    </div>
+</div>
+    </div>

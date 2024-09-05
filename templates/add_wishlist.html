@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card" style="min-height:300px;padding:30px;margin:25%;margin-top:1%;">
+    <header class="fs-4">
+        Add Item to Wishlist
+    </header>
+
+     <form action="{{ url_for('add_wishlist') }}" method="POST" >
+            {{ form.hidden_tag() }}
+            <!--  CSRF Token -->
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group" style="width:100%">
+                            <label>Name <span class="text-danger">*</span></label>
+                            {{ form.name(class_="form-control", placeholder="Name") }}
+                        </div>
+                    </div>
+            </div>
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group" style="width:100%">
+                            <label>Price <span class="text-danger">*</span></label>
+                            {{ form.price(class_="form-control", placeholder="Price") }}
+                        </div>
+                    </div>
+            </div>
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Category <span class="text-danger">*</span></label>
+                            {{ form.category(class_="form-control", placeholder="category") }}
+                        </div>
+                    </div>
+            </div>
+         <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Category <span class="text-danger">*</span></label>
+                            {{ form.type(class_="form-control", placeholder="type") }}
+                        </div>
+                    </div>
+            </div>
+         <div class="row mt-5">
+             <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary"  style="width:100%">Add to Wishlist</button>
+             </div>
+
+         </div>
+
+        </form>
+</div>
+
+{% endblock %}

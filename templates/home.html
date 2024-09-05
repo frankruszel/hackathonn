@@ -1,0 +1,305 @@
+{%extends "base.html"%}
+{%block title%}Home{%endblock%}
+{%block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src=
+"https://d3js.org/d3.v4.min.js"></script>
+<script src=
+"https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.js"></script>
+<link rel="stylesheet"
+      href=
+"https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.css" />
+<link rel=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+      type="text/css" />
+
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+</script>
+<script src=
+"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js">
+</script>
+
+{%endblock %}
+{% block content %}
+<header class="fs-2 text">
+
+</header>
+<div class="row ">
+
+    <div class="col-12">
+        <div class="row ">
+            <!--          Needs  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/2211/2211093.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                         <div class="col" style="line-height:35px">
+                            <div class="row" style="display:flex">
+                                <div class="col">
+                                     <span style="font-size:20px; font-weight:bold">
+                                            Balance
+                                        </span>
+
+
+                                </div>
+                                <div class="col-1 col-auto">
+                                    <a href="/budgeter/needs/limit" class="btn"><img src="https://cdn-icons-png.flaticon.com/128/2311/2311524.png" style="max-height:20px" alt=""></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+
+
+                                ${{ "%.2f"|format((user.balance)) }}
+
+
+
+                        </span>
+
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+
+
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Needs Card End -->
+            <!--          Needs  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/561/561169.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                         <div class="col" style="line-height:35px">
+                            <div class="row" style="display:flex">
+                                <div class="col">
+                                     <span style="font-size:20px; font-weight:bold">
+                                            Income
+                                        </span>
+
+
+                                </div>
+                                <div class="col-1 col-auto">
+                                    <a href="/budgeter/needs/limit" class="btn"><img src="https://cdn-icons-png.flaticon.com/128/2311/2311524.png" style="max-height:20px" alt=""></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+
+
+                                ${{ "%.2f"|format(budget_obj.allowance) }}
+
+
+
+                        </span>
+
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+
+
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Needs Card End -->
+            <!--          Needs  Card Start -->
+            <div class="col gx-4" >
+              <div class="card" style="min-height:180px;display:flex">
+                <div class="container row" style="display:flex;padding-right:0">
+                    <div class="row mt-4 p:0" style="margin-left:-8;display:flex" >
+                        <div class="col-2" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                            <img src="https://cdn-icons-png.flaticon.com/128/561/561169.png" style="max-width:28px;margin:0;"  alt="">
+                       </div>
+                         <div class="col" style="line-height:35px">
+                            <div class="row" style="display:flex">
+                                <div class="col">
+                                     <span style="font-size:20px; font-weight:bold">
+                                            Expense
+                                        </span>
+
+
+                                </div>
+                                <div class="col-1 col-auto">
+                                    <a href="/budgeter/needs/limit" class="btn"><img src="https://cdn-icons-png.flaticon.com/128/2311/2311524.png" style="max-height:20px" alt=""></a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2" style="text-align:center">
+                        <div class="col">
+                            <span class="fs-3">
+
+
+                                ${{ "%.2f"|format(total_expense) }}
+
+
+
+                        </span>
+
+                        </div>
+
+                    </div>
+                     <div class="row-auto gy-3" >
+                        <div class="row" style="padding-top:20">
+
+
+                        </div>
+
+                    </div>
+                </div>
+              </div>
+            </div>
+            <!--            Needs Card End -->
+
+
+        </div>
+        <div class="row">
+
+            <div class="col-12">
+                <div class="row  gx-1">
+                     <div class="card gy-3 p-4" style="min-height:300px;">
+                         <div class="row">
+                             <div class="row">
+
+                                 <div class="col-1" style="padding:0;margin:0;min-height:40px;min-width:40px;background-color:rgba(0,0,0,0.1);text-align:center;line-height:230%;vertical-align:center;border-radius:6px;">
+                                        <img src="https://cdn-icons-png.flaticon.com/128/3427/3427826.png" style="max-width:28px;margin:0;"  alt="">
+                                   </div>
+
+                                 <div class="col">
+                                     <div class="row">
+                                         <div class="col">
+                                         <span class=" fs-4 text ">
+                                           Transaction History
+                                         </span>
+                                     </div>
+
+                                      <div class="col-3 col-auto">
+                                         <a href="/budgeter/allowance/edit" class="btn btn-primary"> edit</a>
+                                    </div>
+                                     </div>
+
+
+
+                                 </div>
+
+                             </div>
+
+
+                                <div class="row-6" style="display:flex;justify-content:center;">
+                                     <canvas id="myChart" style="width:100%;max-width:160px;max-height:160px;"></canvas>
+                                  </div>
+
+                         </div>
+
+                         </div>
+                      </div>
+                 </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+{% block script %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script>
+    // setup
+    const data = {
+
+      datasets: [{
+        label: 'Weekly Sales',
+        data: [{{budget_obj.needs.remaining}}, {{budget_obj.wants.remaining}},{{budget_obj.savings.remaining}}],
+        backgroundColor: [
+          '#28bfb4',
+          '#FF3100',
+          '#FFD700'
+        ],
+        borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+        borderWidth: 0,
+
+        offset: 10,
+        cutout: 55,
+      }]
+    };
+    const doughnutLabel = {
+        id:'doughnutLabel',
+        beforeDatasetsDraw(chart,args,pluginOptions) {
+            const {ctx, data } = chart;
+            ctx.save();
+            const xCoor = chart.getDatasetMeta(0).data[0].x;
+            const yCoor = chart.getDatasetMeta(0).data[0].y;
+            ctx.font = 'bold 30px sans-serif';
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('${{ "%.2f"|format((budget_obj.allowance / budget_obj.days_left)) }}',xCoor,yCoor);
+
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('per day',xCoor,yCoor+25);
+         }
+    };
+
+    // config
+    const config = {
+      type: 'doughnut',
+      data,
+      plugins: [doughnutLabel]
+
+    };
+
+    // render init block
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+
+    // Instantly assign Chart.js version
+    const chartVersion = document.getElementById('chartVersion');
+    chartVersion.innerText = Chart.version;
+    </script>
+{% endblock %}
+
+{%endblock%}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        .glitch {
+            font-size: 120px; /* Increased font size */
+            position: relative;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .glitch::before, .glitch::after {
+            content: '404';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: white;
+            background: black;
+            overflow: hidden;
+            animation: glitch-animation 2s infinite;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip: rect(24px, 550px, 90px, 0);
+            animation-delay: 0.5s;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 blue;
+            clip: rect(85px, 550px, 140px, 0);
+        }
+
+        @keyframes glitch-animation {
+            0% {
+                clip: rect(44px, 550px, 56px, 0);
+            }
+            5% {
+                clip: rect(12px, 550px, 75px, 0);
+            }
+            10% {
+                clip: rect(85px, 550px, 100px, 0);
+            }
+            15% {
+                clip: rect(50px, 550px, 100px, 0);
+            }
+            20% {
+                clip: rect(10px, 550px, 90px, 0);
+            }
+            25% {
+                clip: rect(5px, 550px, 60px, 0);
+            }
+            30% {
+                clip: rect(70px, 550px, 150px, 0);
+            }
+            35% {
+                clip: rect(30px, 550px, 90px, 0);
+            }
+            40% {
+                clip: rect(60px, 550px, 120px, 0);
+            }
+            45% {
+                clip: rect(20px, 550px, 70px, 0);
+            }
+            50% {
+                clip: rect(85px, 550px, 130px, 0);
+            }
+            55% {
+                clip: rect(45px, 550px, 105px, 0);
+            }
+            60% {
+                clip: rect(15px, 550px, 95px, 0);
+            }
+            65% {
+                clip: rect(25px, 550px, 85px, 0);
+            }
+            70% {
+                clip: rect(80px, 550px, 110px, 0);
+            }
+            75% {
+                clip: rect(35px, 550px, 95px, 0);
+            }
+            80% {
+                clip: rect(50px, 550px, 115px, 0);
+            }
+            85% {
+                clip: rect(30px, 550px, 90px, 0);
+            }
+            90% {
+                clip: rect(10px, 550px, 75px, 0);
+            }
+            95% {
+                clip: rect(65px, 550px, 105px, 0);
+            }
+            100% {
+                clip: rect(25px, 550px, 85px, 0);
+            }
+        }
+
+        .home-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            border: 2px solid white;
+            background-color: transparent;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .home-button:hover {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="glitch">404</div>
+        <p>Page Not Found</p>
+        <a href="/home" class="home-button">Go Back to Home Page</a>
+    </div>
+</body>
+</html>

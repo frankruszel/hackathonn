@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #efefef;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .video-quiz {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 90%;
+            max-width: 1000px;
+            background-color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .video-quiz video {
+            width: 500px;
+            height: 300px;
+            border-radius: 10px;
+            border: 3px solid #ddd;
+        }
+
+        .quiz {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 40%;
+        }
+
+        .quiz h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .quiz label {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: block;
+            cursor: pointer;
+        }
+
+        .quiz input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2f3640;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+
+        .quiz button:hover {
+            background-color: #218838;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .feedback.correct {
+            color: #28a745;
+        }
+
+        .feedback.wrong {
+            color: #dc3545;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;">Video and Quiz Section</h1>
+
+    <div class="container">
+        <!-- Video and Quiz for vid1 -->
+        <div class="video-quiz">
+            <div>
+                <h2>Video 1</h2>
+                <video controls>
+                    <source src="{{ url_for('static', filename='vid1.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="quiz">
+                <h2>{{ questions['vid1']['question'] }}</h2>
+                <form method="POST" action="{{ url_for('quiz') }}">
+                    {% for option in questions['vid1']['options'] %}
+                        <label>
+                            <input type="radio" name="vid1_option" value="{{ option }}"> {{ option }}
+                        </label><br>
+                    {% endfor %}
+                    <button type="submit" name="vid1_submit">Submit</button>
+                </form>
+                {% if feedback.get('vid1') %}
+                    <div class="feedback {{ 'correct' if feedback['vid1'] == 'Correct!' else 'wrong' }}">
+                        {{ feedback['vid1'] }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Video and Quiz for vid2 -->
+        <div class="video-quiz">
+            <div>
+                <h2>Video 2</h2>
+                <video controls>
+                    <source src="{{ url_for('static', filename='vid2.mp4') }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="quiz">
+                <h2>{{ questions['vid2']['question'] }}</h2>
+                <form method="POST" action="{{ url_for('quiz') }}">
+                    {% for option in questions['vid2']['options'] %}
+                        <label>
+                            <input type="radio" name="vid2_option" value="{{ option }}"> {{ option }}
+                        </label><br>
+                    {% endfor %}
+                    <button type="submit" name="vid2_submit">Submit</button>
+                </form>
+                {% if feedback.get('vid2') %}
+                    <div class="feedback {{ 'correct' if feedback['vid2'] == 'Correct!' else 'wrong' }}">
+                        {{ feedback['vid2'] }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+

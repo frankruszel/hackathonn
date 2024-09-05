@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card" style="min-height:300px;padding:30px;margin:25%;margin-top:1%;">
+    <header class="fs-4">
+        Add Transaction
+    </header>
+
+     <form action="{{ url_for('add_transaction') }}" method="POST" >
+            {{ form.hidden_tag() }}
+            <!--  CSRF Token -->
+          <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Type <span class="text-danger">*</span></label>
+                        {{ form.type(class_="form-control", placeholder="type") }}
+                    </div>
+                </div>
+         </div>
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group" style="width:100%">
+                            <label>Title <span class="text-danger">*</span></label>
+                            {{ form.title(class_="form-control", placeholder="Title") }}
+                        </div>
+                    </div>
+            </div>
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group" style="width:100%">
+                            <label>Amount <span class="text-danger">*</span></label>
+                            {{ form.amount(class_="form-control", placeholder="Amount") }}
+                        </div>
+                    </div>
+            </div>
+          <div class="row mt-2">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Category <span class="text-danger">*</span></label>
+                            {{ form.category(class_="form-control", placeholder="category") }}
+                        </div>
+                    </div>
+            </div>
+
+         <div class="row mt-5">
+             <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary"  style="width:100%">Make Transaction</button>
+             </div>
+
+         </div>
+
+        </form>
+</div>
+
+{% endblock %}

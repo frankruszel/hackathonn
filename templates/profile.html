@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="money-2724241_1280.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .profile-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .profile-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        label {
+            grid-column: 1 / span 1;
+            text-align: right;
+            padding-right: 10px;
+        }
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+            grid-column: 2 / span 1;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button[type="submit"] {
+            grid-column: 1 / span 2;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button[type="button"] {
+            grid-column: 2 / span 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: #008CBA;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer p {
+            margin: 0;
+        }
+        .error-message {
+            color: red;
+            display: none;
+            grid-column: 2 / span 1;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+         #warningModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+        #warningModal button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #warningModal button:first-child {
+            background-color: #4CAF50;
+        }
+        #warningModal button:last-child {
+            background-color: #f44336;
+        }
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+        .flash-messages {
+            margin-bottom: 20px;
+            text-align:center;
+        }
+        .flash.error {
+            color: red;
+            text-align:center;
+        }
+        .flash.success {
+            color: green;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>EBMT Banking</h1>
+</div>
+<div class="navbar">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('profile') }}">Profile</a>
+    <a href="{{ url_for('make_transaction') }}">Make Transaction</a>
+    <a href="{{ url_for('transaction_history') }}">View Transaction History</a>
+    {% if is_admin %}
+    <a href="{{ url_for('view_logs') }}">View Admin Logs</a>
+    {% endif %}
+    <a href="{{ url_for('sessions') }}">Device Management</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</div>
+<div class="container">
+    <div class="profile-box">
+        <h2>Profile</h2>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form id="profile-form" action="{{ url_for('update_profile') }}" method="POST">
+            {{ form.csrf_token }}
+            <label for="username">Username:</label>
+            {{ form.username(value=account.username) }}
+
+            <label for="email">Email:</label>
+            {{ form.email(value=account.email) }}
+
+            <label for="phone">Phone:</label>
+            {{ form.phone(value=account.phone) }}
+
+            <label for="password">New Password:</label>
+            {{ form.password(id="new-password") }}
+
+            <label for="confirm_password">Confirm Password:</label>
+            {{ form.confirm_password(id="confirm-password") }}
+            <span class="error-message" id="password-error">Please confirm your password.</span>
+
+            <button type="submit">Update Profile</button>
+        </form>
+
+        <form id="google-auth-form" action="{{ url_for('toggle_google_auth') }}" method="POST">
+            {{ form.csrf_token }}
+            <label for="google-auth-toggle">Google Authenticator:</label>
+            <input type="checkbox" id="google-auth-toggle" name="google_auth_enabled" {% if account.google_auth_enabled %} checked {% endif %}>
+            <button type="button" onclick="saveGoogleAuth()">Save</button>
+        </form>
+
+        <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+        <p><a href="{{ url_for('logout') }}">Logout</a></p>
+        <br>
+        <br>
+         <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirmDeletion();">
+            <label for="password">Confirm Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="btn-danger">Delete Account</button>
+        </form>
+
+    </div>
+</div>
+    <div id="warningModal">
+        <p>You have been inactive for a while. Do you want to continue your session?</p>
+        <button onclick="continueSession()">Continue</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+    <script>
+        function saveGoogleAuth() {
+
+            document.getElementById('google-auth-form').submit();
+        }
+
+        let sessionTimeout = 30 * 1000;
+        let warningTime = 10 * 1000;
+        let timeoutHandle;
+        let warningHandle;
+        let isLoggedOut = false;
+
+        function startTimer() {
+            clearTimeout(timeoutHandle);
+            clearTimeout(warningHandle);
+
+            timeoutHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    window.location.href = '/logout';
+                }
+            }, sessionTimeout);
+
+            warningHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    showWarning();
+                }
+            }, sessionTimeout - warningTime);
+        }
+
+        function showWarning() {
+            document.getElementById('warningModal').style.display = 'block';
+        }
+
+        function continueSession() {
+            document.getElementById('warningModal').style.display = 'none';
+            startTimer();
+        }
+
+        function logout() {
+            isLoggedOut = true;
+            window.location.href = '/logout';
+        }
+
+        function resetTimer() {
+            startTimer();
+        }
+
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onkeydown = resetTimer;
+
+        function confirmDeletion() {
+            var password = document.getElementById('password').value;
+            if (password === '') {
+                alert('Please enter your password to confirm account deletion.');
+                return false;
+            }
+            return confirm('Are you sure you want to delete your account? This action cannot be undone.');
+        }
+    </script>
+<div class="footer">
+    <p>© 2024 Banking App. All rights reserved.</p>
+</div>
+
+
+
+</body>
+</html>

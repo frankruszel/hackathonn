@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background: url('{{ url_for("static", filename="money-2724241_1280.jpg") }}') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        #warningModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Slightly darker background */
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 1000; /* Ensure the modal is above other content */
+        }
+        #warningModal button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #warningModal button:first-child {
+            background-color: #4CAF50;
+        }
+        #warningModal button:last-child {
+            background-color: #f44336;
+        }
+        .header {
+            background-color: #004080;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366;
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+            margin: 0 10px;
+            display: inline-block;
+        }
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        .transaction-history-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 60px auto;
+            text-align: center;
+        }
+        .transaction-history-container h2 {
+            color: #0d4e85;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        table th {
+            background-color: #0d4e85;
+            color: white;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        table tr:hover {
+            background-color: #ddd;
+        }
+        .transaction-history a {
+            color: #0d4e85;
+            text-decoration: none;
+        }
+        .transaction-history a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background: #0d4e85;
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        @media (max-width: 600px) {
+            .transaction-history-container {
+                margin: 20px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>EBMT Banking</h1>
+    </div>
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('make_transaction') }}">Make Transaction</a>
+        <a href="{{ url_for('transaction_history') }}">View Transaction History</a>
+        <a href="{{ url_for('sessions') }}">Device Management</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="transaction-history-container">
+        <h2>Transaction History</h2>
+        {% if transactions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.recipient_username }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.transaction_time }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No transactions found.</p>
+        {% endif %}
+        <div class="transaction-history">
+            <a href="{{ url_for('make_transaction') }}">Make a Transaction</a>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 EBMT Banking. All rights reserved.</p>
+    </div>
+            <div id="warningModal">
+                <p>You have been inactive for a while. Do you want to continue your session?</p>
+                <button onclick="continueSession()">Continue</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let sessionTimeout = 30 * 1000;
+        let warningTime = 10 * 1000;
+        let timeoutHandle;
+        let warningHandle;
+        let isLoggedOut = false;
+
+        function startTimer() {
+            clearTimeout(timeoutHandle);
+            clearTimeout(warningHandle);
+
+            timeoutHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    window.location.href = '/logout';
+                }
+            }, sessionTimeout);
+
+            warningHandle = setTimeout(() => {
+                if (!isLoggedOut) {
+                    showWarning();
+                }
+            }, sessionTimeout - warningTime);
+        }
+
+        function showWarning() {
+            document.getElementById('warningModal').style.display = 'block';
+        }
+
+        function continueSession() {
+            document.getElementById('warningModal').style.display = 'none';
+            startTimer();
+        }
+
+        function logout() {
+            isLoggedOut = true;
+            window.location.href = '/logout';
+        }
+
+        function resetTimer() {
+            startTimer();
+        }
+
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onkeydown = resetTimer;
+    </script>
+</body>
+</html>
